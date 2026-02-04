@@ -1,1 +1,1 @@
-# TenX-MCP-SetUp
+# TenX-Project-Chimera
