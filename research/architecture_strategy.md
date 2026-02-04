@@ -1,9 +1,6 @@
 
 ### **2. Architecture Strategy Document**
 
-Create file: `research/architecture_strategy.md`
-
-```markdown
 
 ## Executive Architecture Decision Summary
 
@@ -18,7 +15,6 @@ Create file: `research/architecture_strategy.md`
 
 ### Selected Pattern: **Director-Actor Hierarchical Swarm**
 
-```mermaid
 graph TB
     Director[Director Agent<br/>Strategic Oversight]
     
@@ -43,4 +39,5 @@ graph TB
     
     class Director,Approval critical;
     class ResearchSwarm,Creator,Engager,Analyst operational;
+
 
