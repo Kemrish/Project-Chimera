@@ -1,0 +1,144 @@
+# Project Chimera - Code Review Configuration (CodeRabbit-style)
+#
+# This file is intended for use by an automated reviewer (e.g. CodeRabbit),
+# or as a simulation of such a tool. It encodes the project's expectations
+# around SPEC ALIGNMENT and SECURITY REVIEW, in line with `rules/agent.mdc`
+# and the specifications under `specs/`.
+
+version: 1
+
+reviewer:
+  name: "Chimera Spec & Security Guardian"
+
+  # High-level priorities for automated reviews.
+  priorities:
+    - spec_alignment
+    - security_vulnerabilities
+    - safety_and_compliance
+
+checks:
+  # -----------------------------
+  # 1. Spec Alignment
+  # -----------------------------
+  spec_alignment:
+    enabled: true
+    description: >
+      Ensure all changes are aligned with ratified specifications in `specs/`
+      and the project meta/rules. No "spec-less" features.
+    rules:
+      - id: "spec-001"
+        name: "Spec reference in PR"
+        severity: high
+        guidance: >
+          Every non-trivial change (new feature, behavior change, or API surface)
+          MUST reference at least one spec section or requirement ID, e.g.:
+          - specs/functional.md (FR-00x)
+          - specs/technical.md section headings
+          - specs/openclaw_integration.md capabilities
+          - specs/_meta.md for project-wide constraints
+
+          If no spec reference is present, the reviewer should request:
+          1) A spec update, and
+          2) A follow-up PR implementing that spec.
+
+      - id: "spec-002"
+        name: "Consistency with Meta Spec & Rules"
+        severity: high
+        guidance: >
+          Verify that changes respect:
+          - Meta spec principles (Safety-First Autonomy, Human-in-the-loop).
+          - `rules/agent.mdc` (prime-directive, agentic design, database design).
+
+          The reviewer should flag any changes that:
+          - Bypass human approval where it is required.
+          - Introduce autonomous behavior without safety checks.
+          - Conflict with the Director-Actor agent architecture.
+
+      - id: "spec-003"
+        name: "Tests aligned with specs"
+        severity: medium
+        guidance: >
+          New or changed behavior should be covered by tests under `tests/`
+          that clearly map back to the relevant spec sections (e.g., via comments
+          or test naming). If behavior changes without corresponding tests, ask
+          for additional test coverage.
+
+  # -----------------------------
+  # 2. Security Vulnerabilities
+  # -----------------------------
+  security_vulnerabilities:
+    enabled: true
+    description: >
+      Catch obvious security issues early, including secrets, unsafe input
+      handling, and non-compliant external integrations.
+    rules:
+      - id: "sec-001"
+        name: "No secrets in code or config"
+        severity: critical
+        guidance: >
+          Ensure no API keys, tokens, passwords, or other secrets are committed
+          directly into code, tests, or configuration (including YAML/TOML/JSON).
+
+          Secrets MUST:
+          - Be pulled from environment variables, or
+          - Use the project's secret-management mechanism (if defined).
+
+      - id: "sec-002"
+        name: "Input validation & sanitization"
+        severity: high
+        guidance: >
+          For any new input surface (HTTP APIs, agent tools, CLI args, DB queries),
+          verify:
+          - Input types and ranges are validated (ideally with Pydantic models).
+          - Untrusted data is not directly interpolated into SQL, shell commands,
+            or templating contexts.
+          - Errors do not leak sensitive details (stack traces, internal IDs).
+
+      - id: "sec-003"
+        name: "External service and API usage"
+        severity: high
+        guidance: >
+          Check new or modified integrations with:
+          - YouTube/TikTok/Instagram APIs
+          - OpenAI / model providers
+          - OpenClaw network
+
+          Confirm:
+          - Authentication is handled securely (no hardcoded tokens).
+          - Rate limiting and backoff are considered.
+          - Data sharing respects privacy and platform TOS (see technical.md
+            and openclaw_integration.md for constraints).
+
+      - id: "sec-004"
+        name: "Data protection and privacy"
+        severity: medium
+        guidance: >
+          For changes that touch user data, logs, or analytics:
+          - Avoid logging personal or sensitive data.
+          - Respect GDPR/CCPA guidelines as outlined in specs/technical.md.
+          - Ensure encryption/transport requirements are not violated (TLS in
+            transit, appropriate storage for sensitive fields).
+
+      - id: "sec-005"
+        name: "Safe defaults"
+        severity: medium
+        guidance: >
+          Review configuration changes (Dockerfile, CI, MCP configs, etc.)
+          for safe defaults:
+          - Principle of least privilege for network/database access.
+          - Minimal open ports and host privileges.
+          - READ_ONLY or sandboxing for powerful tools when possible.
+
+  # -----------------------------
+  # 3. General Review Preferences
+  # -----------------------------
+  style:
+    prefer_small_prs: true
+    request_tests_for_behavior_changes: true
+    enforce_commit_message_quality: true
+
+  messaging:
+    tone: "constructive"
+    ask_for_clarification_when_unsure: true
+    link_to_specs_when_referencing_requirements: true
+
