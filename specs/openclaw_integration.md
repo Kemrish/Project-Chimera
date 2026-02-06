@@ -30,7 +30,7 @@ timeline
     section Phase 4 (Week 7-8)
         Full Participation : Active marketplace<br>participation
         Network Contributions : Share insights<br>and trend data
-
+```
 
 ## Agent Capability Definitions
 
