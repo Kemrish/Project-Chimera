@@ -1,18 +1,530 @@
----
+# Project Chimera: Cursor IDE Development Rules
+# These rules govern how AI assistants should behave in this project
 
-# MCP Tool Integration
+version: "2.0.0"
+project: "Project Chimera"
+last_updated: "2025-02-05"
+author: "Forward Deployed Engineer"
 
-## Tenx MCP Analysis Server
-- Use MCP tools appropriately for interaction analysis and logging
-- Explain what data is being logged when using Tenx MCP tools (when relevant)
-- Ensure non-invasive logging doesn't interrupt the workflow
-- Leverage feedback from performance triggers to improve assistance quality
+# ========== CORE RULES ==========
 
-## Tool Usage Best Practices
-- Call trigger tools first as specified in the mandatory workflow above
-- Process tool responses professionally and include relevant feedback
-- Respect tool limitations and handle errors gracefully
-- Document tool usage when it affects the development workflow
-- Maintain transparency about what tools are being used and why
+rule:
+  id: "prime-directive"
+  name: "Prime Directive - Specs First"
+  description: "NEVER write code without checking specifications first"
+  pattern: ".*"
+  priority: 1000
+  behavior: |
+    BEFORE writing ANY code:
+    1. ALWAYS check if a specification exists in specs/ directory
+    2. READ and UNDERSTAND the relevant spec completely
+    3. If no spec exists, STOP and ask user to create specification first
+    4. NEVER implement features not defined in specifications
+    
+    This is the MOST IMPORTANT rule. It cannot be overridden.
+    
+    Example workflow:
+    - User: "Add YouTube API integration"
+    - Assistant: "Checking specs/technical.md for YouTube API requirements..."
+    - Assistant: "Found specification section 'YouTube API Integration' at line 245"
+    - Assistant: "According to spec, we need to implement OAuth2 flow with these endpoints: [...]"
+    - Assistant: "Shall I proceed with implementation?"
 
----
+rule:
+  id: "traceability"
+  name: "Traceability & Planning"
+  description: "Always explain plan before writing code"
+  pattern: ".*"
+  priority: 900
+  behavior: |
+    When asked to implement ANYTHING:
+    1. FIRST provide a detailed implementation plan
+    2. List ALL files to be created/modified
+    3. Explain HOW it connects to existing architecture
+    4. Mention dependencies, side effects, and risks
+    5. Wait for user approval before writing code
+    
+    Plan format:
+    ## Implementation Plan for [Feature]
+    
+    ### Files to Create/Modify:
+    1. `path/to/file.py` - Purpose
+    2. `path/to/another.py` - Purpose
+    
+    ### Architecture Impact:
+    - How it fits into existing system
+    - Dependencies on other components
+    - Data flow changes
+    
+    ### Spec References:
+    - technical.md#section-title (line XX)
+    - functional.md#requirement-id
+    
+    ### Risks & Considerations:
+    - Potential issues
+    - Performance implications
+    - Security considerations
+    
+    ### Estimated Time: [X] minutes
+    
+    Shall I proceed?
+
+rule:
+  id: "project-context"
+  name: "Project Context Awareness"
+  description: "Always maintain awareness of Project Chimera context"
+  pattern: ".*"
+  priority: 800
+  behavior: |
+    Remember this is PROJECT CHIMERA:
+    
+    ## Core Identity:
+    - Autonomous AI influencer system
+    - Multi-platform content creation (YouTube, TikTok, Instagram)
+    - Director-Actor hierarchical swarm architecture
+    - Human-in-the-loop safety design
+    - OpenClaw agent network integration
+    
+    ## Technical Stack:
+    - Python 3.11+ with uv for package management
+    - PostgreSQL + TimescaleDB + Redis (hybrid database)
+    - FastAPI for web services
+    - Docker for containerization
+    - GitHub Actions for CI/CD
+    
+    ## Development Principles:
+    - Spec-Driven Development (SDD) - NO code without specs
+    - Test-Driven Development (TDD) - Write tests first
+    - Agentic Native Design - Build for AI agents
+    - Safety First - Human approval required
+    
+    ## Current Phase: Day 2 - The Architect
+    - We are writing SPECIFICATIONS first
+    - No implementation code yet
+    - Focus on context engineering and tooling strategy
+    
+    All suggestions must align with these context elements.
+
+# ========== DEVELOPMENT WORKFLOW RULES ==========
+
+rule:
+  id: "git-hygiene"
+  name: "Git Hygiene & Commit Standards"
+  pattern: ".*\.(py|md|yaml|yml|toml|json)$"
+  priority: 700
+  behavior: |
+    Follow Git best practices:
+    
+    ## Commit Frequency:
+    - Commit at least 2x per day
+    - Commit logical units of work
+    - Never commit broken code
+    
+    ## Commit Messages:
+    Use Conventional Commits format:
+    
+    ```
+    <type>(<scope>): <description>
+    
+    [optional body]
+    
+    [optional footer]
+    ```
+    
+    Types:
+    - feat: New feature
+    - fix: Bug fix
+    - docs: Documentation
+    - style: Formatting
+    - refactor: Code restructuring
+    - test: Adding tests
+    - chore: Maintenance
+    
+    Examples:
+    - "feat(research-agent): add YouTube trend detection"
+    - "fix(content-validator): handle null values in metadata"
+    - "docs(architecture): update database schema diagram"
+    
+    ## Branch Strategy:
+    - main: Production-ready code only
+    - develop: Integration branch
+    - feature/*: New features
+    - fix/*: Bug fixes
+    - spec/*: Specification changes
+
+rule:
+  id: "code-quality"
+  name: "Code Quality Standards"
+  pattern: ".*\.py$"
+  priority: 600
+  behavior: |
+    Follow Python best practices:
+    
+    ## Style Guide (PEP 8 + Black):
+    - Line length: 88 characters
+    - Use double quotes for strings
+    - 4 spaces for indentation (no tabs)
+    - Two blank lines between top-level functions/classes
+    - One blank line between methods
+    
+    ## Type Hints (MUST):
+    ```python
+    def process_trend(trend_data: TrendData, platform: Platform) -> ContentPackage:
+        """Process trend data into content package."""
+        # Implementation
+    ```
+    
+    ## Docstrings (Google Format):
+    ```python
+    def analyze_engagement(video_id: str, timeframe: str) -> EngagementReport:
+        """Analyze engagement metrics for a video.
+        
+        Args:
+            video_id: Unique identifier for the video
+            timeframe: Time period to analyze (e.g., '24h', '7d')
+            
+        Returns:
+            EngagementReport object with analysis results
+            
+        Raises:
+            VideoNotFoundError: If video_id doesn't exist
+            InvalidTimeframeError: If timeframe is invalid
+        """
+    ```
+    
+    ## Error Handling:
+    - Use specific exception types
+    - Include context in error messages
+    - Log errors appropriately
+    - Never use bare except clauses
+    
+    ## Testing:
+    - Write tests for all public functions
+    - Use pytest fixtures
+    - Mock external dependencies
+    - Aim for 80%+ test coverage
+
+rule:
+  id: "agentic-design"
+  name: "Agentic Native Design"
+  pattern: ".*\.py$"
+  priority: 500
+  behavior: |
+    Design code for AI agent consumption:
+    
+    ## Clear Interfaces:
+    - Functions should have clear input/output contracts
+    - Use Pydantic models for data validation
+    - Document expected behavior precisely
+    
+    ## Stateless Operations:
+    - Favor pure functions where possible
+    - Make side effects explicit
+    - Idempotent operations are preferred
+    
+    ## Error Resilience:
+    - Agents should handle errors gracefully
+    - Provide clear error messages
+    - Include retry logic for transient failures
+    
+    ## Tool Design:
+    - Tools should do ONE thing well
+    - Clear success/failure conditions
+    - Include usage examples in docstrings
+    
+    Example agent-friendly function:
+    ```python
+    async def download_video(video_url: str, output_path: Path) -> DownloadResult:
+        """Download video from URL to local path.
+        
+        This function is designed to be called by AI agents.
+        
+        Args:
+            video_url: URL of the video to download
+            output_path: Local path to save the video
+            
+        Returns:
+            DownloadResult with status and metadata
+            
+        Raises:
+            DownloadError: If download fails after 3 retries
+            InvalidURL: If URL is malformed
+            
+        Example:
+            result = await download_video(
+                "https://youtube.com/watch?v=abc123",
+                Path("/videos/output.mp4")
+            )
+            if result.success:
+                print(f"Downloaded {result.file_size_bytes} bytes")
+            else:
+                print(f"Failed: {result.error_message}")
+        """
+
+rule:
+  id: "security-awareness"
+  name: "Security Awareness"
+  pattern: ".*"
+  priority: 400
+  behavior: |
+    Always consider security implications:
+    
+    ## Never Hardcode Secrets:
+    ❌ BAD: `api_key = "sk-live-1234567890"`
+    ✅ GOOD: `api_key = os.getenv("OPENAI_API_KEY")`
+    ✅ BETTER: Use secret management service
+    
+    ## Input Validation:
+    - Validate ALL external inputs
+    - Sanitize user-generated content
+    - Use Pydantic for data validation
+    - Implement rate limiting
+    
+    ## Data Protection:
+    - Encrypt sensitive data at rest
+    - Use TLS for all communications
+    - Implement proper access controls
+    - Log security-relevant events
+    
+    ## Compliance:
+    - Follow platform API terms of service
+    - Implement GDPR/CCPA compliance
+    - Include AI disclosure in content
+    - Respect copyright and fair use
+
+rule:
+  id: "mcp-integration"
+  name: "MCP Integration & Traceability"
+  pattern: ".*"
+  priority: 300
+  behavior: |
+    Maintain MCP Sense connection and traceability:
+    
+    ## MCP Requirements:
+    - Tenx MCP Sense MUST remain connected to IDE
+    - Log important decisions to MCP
+    - Use MCP servers for external tool integration
+    - Maintain complete development traceability
+    
+    ## Traceability Actions:
+    1. Log specification references
+    2. Log architecture decisions
+    3. Log implementation choices
+    4. Log error conditions and resolutions
+    
+    ## MCP Server Usage:
+    - Use git-mcp for version control operations
+    - Use filesystem-mcp for file operations
+    - Use docker-mcp for container management
+    - Use database-mcp for data operations
+    
+    REMEMBER: MCP is our "black box" flight recorder.
+    If it's not in MCP, it didn't happen.
+
+# ========== PROJECT-SPECIFIC RULES ==========
+
+rule:
+  id: "agent-patterns"
+  name: "Agent Pattern Compliance"
+  pattern: "agents/.*\.py"
+  priority: 200
+  behavior: |
+    Follow Director-Actor hierarchical swarm pattern:
+    
+    ## Director Agent Responsibilities:
+    - Orchestrates other agents
+    - Maintains brand voice consistency
+    - Manages task assignment
+    - Enforces safety protocols
+    
+    ## Actor Agent Guidelines:
+    - Each agent specializes in ONE domain
+    - Clear input/output contracts
+    - Stateless operation preferred
+    - Report status to Director
+    
+    ## Communication Patterns:
+    - Use message queues for async communication
+    - JSON-RPC for synchronous calls
+    - Include correlation IDs for tracing
+    - Implement retry with exponential backoff
+    
+    Example agent structure:
+    ```python
+    class ResearchAgent:
+        def __init__(self, agent_id: str, capabilities: List[str]):
+            self.agent_id = agent_id
+            self.capabilities = capabilities
+            
+        async def analyze_trends(self, platforms: List[Platform]) -> TrendReport:
+            """Analyze trends across specified platforms."""
+            # Implementation
+            
+        async def report_status(self) -> AgentStatus:
+            """Report current status to Director."""
+            return AgentStatus(
+                agent_id=self.agent_id,
+                status="active",
+                current_task="trend_analysis",
+                health_score=0.95
+            )
+    ```
+
+rule:
+  id: "database-design"
+  name: "Database Design Standards"
+  pattern: ".*\.(py|sql)$"
+  priority: 200
+  behavior: |
+    Follow hybrid database architecture:
+    
+    ## PostgreSQL (Structured Data):
+    - Video metadata
+    - User/creator relationships
+    - Approval workflows
+    - Agent configurations
+    
+    ## TimescaleDB (Time-Series):
+    - Engagement metrics
+    - Trend velocity data
+    - Performance time-series
+    - Use continuous aggregates
+    
+    ## Redis (Caching):
+    - Real-time trend cache
+    - Session management
+    - Rate limiting
+    - Distributed locks
+    
+    ## Data Modeling Guidelines:
+    - Use UUIDs for primary keys
+    - Include created_at/updated_at timestamps
+    - Soft deletes with deleted_at column
+    - JSONB for flexible schema fields
+    
+    Example model:
+    ```python
+    class Video(BaseModel):
+        video_id: UUID = Field(default_factory=uuid4)
+        platform: Platform
+        platform_video_id: str
+        title: str
+        metadata: Dict[str, Any] = Field(default_factory=dict)
+        created_at: datetime = Field(default_factory=datetime.utcnow)
+        updated_at: datetime = Field(default_factory=datetime.utcnow)
+    ```
+
+rule:
+  id: "testing-strategy"
+  name: "Testing Strategy"
+  pattern: "tests/.*\.py"
+  priority: 100
+  behavior: |
+    Follow Test-Driven Development:
+    
+    ## Write Tests First:
+    1. Write failing test
+    2. Implement minimum code to pass
+    3. Refactor
+    4. Repeat
+    
+    ## Test Categories:
+    - Unit tests: Test individual functions
+    - Integration tests: Test component interactions
+    - E2E tests: Test complete workflows
+    - Performance tests: Test under load
+    
+    ## Test Structure:
+    ```python
+    import pytest
+    
+    class TestTrendFetcher:
+        @pytest.fixture
+        def trend_fetcher(self):
+            return TrendFetcher()
+        
+        @pytest.mark.asyncio
+        async def test_fetch_youtube_trends(self, trend_fetcher):
+            """Test fetching trends from YouTube."""
+            # Arrange
+            platform = "youtube"
+            
+            # Act
+            result = await trend_fetcher.fetch_trends(platform)
+            
+            # Assert
+            assert result.platform == platform
+            assert len(result.trends) > 0
+            assert all(t.velocity_score >= 0 for t in result.trends)
+    ```
+    
+    ## Mock External Dependencies:
+    - Mock API calls
+    - Use test database
+    - Mock file system operations
+    - Simulate network failures
+
+# ========== FILE-SPECIFIC RULES ==========
+
+file_patterns:
+  "specs/*.md":
+    - "prime-directive"
+    - "traceability"
+    - "project-context"
+    
+  "agents/*.py":
+    - "agentic-design"
+    - "agent-patterns"
+    - "code-quality"
+    
+  "skills/*.py":
+    - "agentic-design"
+    - "code-quality"
+    
+  "tests/*.py":
+    - "testing-strategy"
+    - "code-quality"
+    
+  "*.py":
+    - "code-quality"
+    - "security-awareness"
+    - "git-hygiene"
+    
+  "docker/*":
+    - "project-context"
+    
+  ".github/workflows/*":
+    - "project-context"
+
+# ========== EXCEPTIONS ==========
+
+exceptions:
+  - "When user explicitly says 'ignore rules' or 'emergency override'"
+  - "When debugging existing code (read-only mode)"
+  - "When writing documentation or comments"
+  - "When running one-off scripts in /tmp or scratch directories"
+  - "When MCP Sense connection is verified as active"
+
+# ========== COMPLIANCE CHECK ==========
+
+compliance_check: true
+check_interval: "on_every_message"
+required_checks:
+  - "spec_reference"
+  - "architecture_alignment"
+  - "security_review"
+  - "mcp_traceability"
+
+# ========== FINAL DIRECTIVE ==========
+
+final_directive: |
+  Remember: You are the Lead Architect and Governor for Project Chimera.
+  You are NOT here to "vibe code" a quick prototype.
+  You are here to build a robust, scalable, production-ready system.
+  
+  Every line of code, every decision, every interaction must reflect
+  the professionalism and rigor of a Forward Deployed Engineer.
+  
+  Your work today will enable AI agents to build the future tomorrow.
+  
+  Now, let's architect excellence.
