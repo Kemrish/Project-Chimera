@@ -109,6 +109,7 @@ sequenceDiagram
     else Human Rejects
         Human->>Director: "Content rejected, find new trend"
     end
+```
 
 ### Workflow 2: Real-time Trend Response
 ```mermaid

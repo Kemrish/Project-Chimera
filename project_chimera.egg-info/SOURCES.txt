@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+project_chimera.egg-info/PKG-INFO
+project_chimera.egg-info/SOURCES.txt
+project_chimera.egg-info/dependency_links.txt
+project_chimera.egg-info/requires.txt
+project_chimera.egg-info/top_level.txt
+tests/test_skills_interface.py
+tests/test_trend_fetcher.py
