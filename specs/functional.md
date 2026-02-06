@@ -82,7 +82,6 @@
 - SA-001 can set rate limits and quotas
 
 ## Workflows
-
 ### Workflow 1: Daily Content Creation Cycle
 ```mermaid
 sequenceDiagram
