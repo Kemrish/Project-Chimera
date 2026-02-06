@@ -1,4 +1,3 @@
-```markdown
 # Project Chimera: OpenClaw Integration Specification
 *Version: 1.0.0*
 *Ratification Date: February 5, 2025*
@@ -31,7 +30,7 @@ timeline
     section Phase 4 (Week 7-8)
         Full Participation : Active marketplace<br>participation
         Network Contributions : Share insights<br>and trend data
-```
+
 
 ## Agent Capability Definitions
 

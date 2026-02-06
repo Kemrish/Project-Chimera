@@ -1,4 +1,3 @@
-```markdown
 # Project Chimera: Functional Specification
 *Version: 1.0.0*
 *Ratification Date: February 5, 2025*
@@ -110,7 +109,6 @@ sequenceDiagram
     else Human Rejects
         Human->>Director: "Content rejected, find new trend"
     end
-```
 
 ### Workflow 2: Real-time Trend Response
 ```mermaid
